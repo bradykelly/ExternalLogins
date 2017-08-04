@@ -73,10 +73,14 @@ namespace ExternalLogins.Facebook
             }
 
             app.UseStaticFiles();
-            app.UseIdentity();
-            app.UseCors(builder => builder.WithOrigins("www.facebook.com").AllowAnyOrigin());
+            app.UseIdentity();    
 
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
+            app.UseFacebookAuthentication(new FacebookOptions
+            {
+                AppId = ExternalLoginsModel.FaceBook.AppId,
+                AppSecret = ExternalLoginsModel.FaceBook.AppSecret,
+            });
 
             app.UseMvc(routes =>
             {
