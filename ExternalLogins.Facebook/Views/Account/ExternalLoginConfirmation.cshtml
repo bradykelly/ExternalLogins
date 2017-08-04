@@ -3,29 +3,41 @@
     ViewData["Title"] = "Register";
 }
 
-<h2>@ViewData["Title"].</h2>
 <h3>Associate your @ViewData["LoginProvider"] account.</h3>
 
 <form asp-controller="Account" asp-action="ExternalLoginConfirmation" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
-    <h4>Association Form</h4>
+    <h3>Association Form</h3>
     <hr />
     <div asp-validation-summary="All" class="text-danger"></div>
 
-    <p class="text-info">
-        You've successfully authenticated with <strong>@ViewData["LoginProvider"]</strong>.
-        Please enter an email address for this site below and click the Register button to finish
-        logging in.
-    </p>
-    <div class="form-group">
-        <label asp-for="Email" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="Email" class="form-control" />
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
+    <div class="row">
+        <div class="col-md-6"></div>
+        <p class="text-info">
+            You are properly authenticated with <strong>@ViewData["LoginProvider"]</strong>.
+            Now you need to link a local account, to provide us with your used details. We don't get
+            much from Facebook. I you don't yet have a local account, i.e. if you have not registered
+            on this site yet, simply click the Register button below and log i
+        </p>
+        class="col-md-9"
+        <p>
+            <h3>Link to Account</h3>
+            @Html.Partial("_LoginInputs", Model.Login)
+            <button type="submit">Login</button>
+            <a freh="@Url.Action("Index", "Home")">Cancel</a>
+        </p>
     </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <button type="submit" class="btn btn-default">Register</button>
+    <div class="row">
+        <div class="form-group">
+            <label asp-for="Email" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-default">Register</button>
+            </div>
         </div>
     </div>
 </form>

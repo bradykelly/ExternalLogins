@@ -51,7 +51,9 @@ namespace ExternalLogins.Facebook.Controllers
             await HttpContext.Authentication.SignOutAsync(_externalCookieScheme);
 
             ViewData["ReturnUrl"] = returnUrl;
-            return View();
+
+            var model = new LoginViewModel();
+            return View(model);
         }
 
         //
@@ -66,7 +68,7 @@ namespace ExternalLogins.Facebook.Controllers
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation(1, "User logged in.");
@@ -155,6 +157,7 @@ namespace ExternalLogins.Facebook.Controllers
             var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account", new { ReturnUrl = returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return Challenge(properties, provider);
+
         }
 
         //
@@ -188,6 +191,13 @@ namespace ExternalLogins.Facebook.Controllers
             if (result.IsLockedOut)
             {
                 return View("Lockout");
+            }
+            else
+            {
+                // NB What now? 
+                return  RedirectToAction(
+                    
+                    "", "Error")
             }
             else
             {
