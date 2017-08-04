@@ -47,6 +47,7 @@ namespace ExternalLogins.Facebook
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddCors();
             services.AddMvc();
 
             // Add application services.
@@ -72,8 +73,8 @@ namespace ExternalLogins.Facebook
             }
 
             app.UseStaticFiles();
-
             app.UseIdentity();
+            app.UseCors(builder => builder.WithOrigins("www.facebook.com").AllowAnyOrigin());
 
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
 
