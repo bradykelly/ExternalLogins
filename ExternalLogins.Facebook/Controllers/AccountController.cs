@@ -50,8 +50,9 @@ namespace ExternalLogins.Facebook.Controllers
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.Authentication.SignOutAsync(_externalCookieScheme);
 
-            ViewData["ReturnUrl"] = returnUrl;
-            return View();
+            var model = new LoginViewModel();
+            model.ReturnUrl = returnUrl;
+            return View(model);
         }
 
         //
@@ -59,9 +60,11 @@ namespace ExternalLogins.Facebook.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            ViewData["ReturnUrl"] = returnUrl;
+            // TODO Is this ever needed in ViewData?
+            ViewData["ReturnUrl"] = model.ReturnUrl;
+
             if (ModelState.IsValid)
             {
                 // This doesn't count login failures towards account lockout
@@ -70,11 +73,11 @@ namespace ExternalLogins.Facebook.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation(1, "User logged in.");
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToLocal(model.ReturnUrl);
                 }
                 if (result.RequiresTwoFactor)
                 {
-                    return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    return RedirectToAction(nameof(SendCode), new { ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
                 }
                 if (result.IsLockedOut)
                 {

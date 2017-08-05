@@ -23,39 +23,8 @@
     
 @* TODO Do I need this? Looks handy.*@
 @*@RenderSection("BodyScriptsTop", false)*@
-<script>
 
-    function statusChangeCallback(response) {
-        let status = response.status;
-        debugger;
-    }
-
-    window.fbAsyncInit = function() {
-        FB.init({
-            appId: '1921033554817400',
-            cookie: true,
-            xfbml: true,
-            version: 'v2.8'
-        });
-        FB.AppEvents.logPageView();
-        FB.getLoginStatus(function (response) {
-            debugger;
-            statusChangeCallback(response);
-        });
-    };
-
-    (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) {
-            return;
-        }
-        js = d.createElement(s);
-        js.id = id;
-        js.src = "//connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-
-</script>
+@Html.Partial("_FacebookAuthPartial")
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
