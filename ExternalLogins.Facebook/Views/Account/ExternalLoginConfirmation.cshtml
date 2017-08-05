@@ -1,35 +1,32 @@
-﻿@model ExternalLoginConfirmationViewModel
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@model ExternalLogins.Facebook.ViewModels.Account.LoginViewModel
 @{
     ViewData["Title"] = "Register";
 }
 
 <h3>Associate your @ViewData["LoginProvider"] account.</h3>
-
-<form asp-controller="Account" asp-action="ExternalLoginConfirmation" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
-    <h3>Association Form</h3>
-    <hr />
-    <div asp-validation-summary="All" class="text-danger"></div>
-
+<div class="row">
+    <div class="col-md-6">
         <p class="text-info">
-            You've successfully authenticated with <strong>@ViewData["LoginProvider"]</strong>.
-            If you have a local account, i.e. if you have previously completed the registration process for this website,
-            please sign in to that account in the right hand side panel. If you do not have a local login, please click
-            the <strong>Register</strong> button at the bottom of that right side panel. You will then complete our simple
-            registration process, and then automatically link your Facebook login to this account.
+            You've successfully logged in with <strong>@ViewData["LoginProvider"]</strong>.
+            If you have a local account, i.e. if you have previously registeted for this website,
+            please sign in to that account in the right hand side panel, so that we can link that account to your Facebook login.
+            If you do not have a local login, please click the <strong>Register</strong> button at the bottom of that right side panel. 
+            You will then complete our simple registration process, and we then automatically link your Facebook login to your new account.
         </p>
     </div>
-</div>
-<div class="col-md-6">
-    <form asp-controller="Account" asp-action="ExternalLoginConfirmation" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
-        <div asp-validation-summary="All" class="text-danger"></div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <button type="submit" class="btn btn-default">Register</button>
+    <div class="col-md-6">
+        <form asp-controller="Account" asp-action="ExternalLoginConfirmation" method="post" class="form-horizontal">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            @Html.Partial("_LoginInputsPartial")
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button type="submit" class="btn btn-default">Register</button>
+                </div>
             </div>
-        </div>
-    </form>
-
+        </form>
+    </div>
+</div>
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }

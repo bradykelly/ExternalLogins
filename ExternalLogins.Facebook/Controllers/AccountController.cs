@@ -12,12 +12,15 @@ using Microsoft.Extensions.Options;
 using ExternalLogins.Facebook.Models;
 using ExternalLogins.Facebook.Models.AccountViewModels;
 using ExternalLogins.Facebook.Services;
+using ExternalLogins.Facebook.ViewModels.Account;
 
 namespace ExternalLogins.Facebook.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
+        // TODOP Remove all stupid URL comments on actions.
+
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
@@ -198,15 +201,13 @@ namespace ExternalLogins.Facebook.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             ViewData["LoginProvider"] = info.LoginProvider;
             var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-            return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel {Email = email, ReturnUrl = returnUrl, LoginProvider = info.LoginProvider});
+            return View("ExternalLoginConfirmation", new LoginViewModel() {Email = email, ReturnUrl = returnUrl, LoginProvider = info.LoginProvider});
         }
 
-        //
-        // POST: /Account/ExternalLoginConfirmation
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl = null)
+        public async Task<IActionResult> ExternalLoginConfirmation(LoginViewModel model, string returnUrl = null)
         {
             if (ModelState.IsValid)
             {
@@ -231,11 +232,10 @@ namespace ExternalLogins.Facebook.Controllers
                 AddErrors(result);
             }
 
-            ViewData["ReturnUrl"] = returnUrl;
+            model.ReturnUrl = returnUrl;
             return View(model);
         }
 
-        // GET: /Account/ConfirmEmail
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
@@ -253,8 +253,6 @@ namespace ExternalLogins.Facebook.Controllers
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
-        //
-        // GET: /Account/ForgotPassword
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ForgotPassword()
@@ -262,8 +260,6 @@ namespace ExternalLogins.Facebook.Controllers
             return View();
         }
 
-        //
-        // POST: /Account/ForgotPassword
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]

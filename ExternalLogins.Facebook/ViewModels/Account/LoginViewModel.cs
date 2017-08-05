@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Emit;
 
-namespace ExternalLogins.Facebook
+namespace ExternalLogins.Facebook.ViewModels.Account
 {
     public class LoginViewModel
     {
@@ -29,11 +24,15 @@ namespace ExternalLogins.Facebook
         public string ReturnUrl { get; set; }
 
         [HiddenInput(DisplayValue = false)]
-        [StringLength(2000)]
+        [StringLength(254, MinimumLength = 5)]
         public string Email
         {
             get => UserName;
             set => UserName = value;
         }
+
+        [HiddenInput(DisplayValue = false)]
+        [StringLength(50)]
+        public string LoginProvider { get; set; }
     }
 }
