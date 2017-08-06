@@ -227,11 +227,8 @@ namespace ExternalLogins.Facebook.Controllers
                         result = await _userManager.AddLoginAsync(user, info);
                         if (!result.Succeeded)
                         {
-                            // NB Error handling here.
-                            foreach (var error in result.Errors)
-                            {
-                                ModelState.AddModelError(string.Empty, error.Code + " " + error.Description);
-                            }
+                            AddErrors(result);
+                            return View(model);
                         }
                     }
 
@@ -239,13 +236,10 @@ namespace ExternalLogins.Facebook.Controllers
                     _logger.LogInformation(6, "User linked account to {Name} provider.", info.LoginProvider);
                     return RedirectToLocal(returnUrl);
                 }
-                else
-                {
-                    AddErrors(result);
-                    ModelState.AddModelError(string.Empty, "Unsuccessful local login attempt. Invalid credentials.");
-                }
+                
             }
 
+            ModelState.AddModelError(string.Empty, "Unsuccessful local login attempt. Invalid credentials.");
             model.ReturnUrl = returnUrl;
             return View(model);
         }
