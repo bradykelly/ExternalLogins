@@ -17,6 +17,7 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
+    <link href="~/css/erisia.css" rel="stylesheet" />
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 <body>
@@ -25,7 +26,7 @@
 @*@RenderSection("BodyScriptsTop", false)*@
 
 @Html.Partial("_FacebookAuthPartial")
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav id="topNavBar" class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">

@@ -13,6 +13,7 @@ using ExternalLogins.Facebook.Models;
 using ExternalLogins.Facebook.Models.AccountViewModels;
 using ExternalLogins.Facebook.Services;
 using ExternalLogins.Facebook.ViewModels.Account;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace ExternalLogins.Facebook.Controllers
 {
@@ -44,8 +45,6 @@ namespace ExternalLogins.Facebook.Controllers
             _logger = loggerFactory.CreateLogger<AccountController>();
         }
 
-        //
-        // GET: /Account/Login
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
@@ -53,8 +52,10 @@ namespace ExternalLogins.Facebook.Controllers
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.Authentication.SignOutAsync(_externalCookieScheme);
 
-            var model = new LoginViewModel();
-            model.ReturnUrl = returnUrl;
+            var model = new LoginViewModel()
+            {
+                ReturnUrl = returnUrl
+            };
             return View(model);
         }
 
@@ -66,13 +67,13 @@ namespace ExternalLogins.Facebook.Controllers
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             // TODO Is this ever needed in ViewData?
-            ViewData["ReturnUrl"] = model.ReturnUrl;
+            ////ViewData["ReturnUrl"] = model.ReturnUrl;
 
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: true);
+
+                // NB Exact duplicate of action for linking accounts.
                 if (result.Succeeded)
                 {
                     _logger.LogInformation(1, "User logged in.");
@@ -161,7 +162,6 @@ namespace ExternalLogins.Facebook.Controllers
             var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account", new { ReturnUrl = returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return Challenge(properties, provider);
-
         }
 
         //
@@ -198,10 +198,8 @@ namespace ExternalLogins.Facebook.Controllers
             }
 
             // If the user does not have an account, then ask the user to create an account.
-            ViewData["ReturnUrl"] = returnUrl;
-            ViewData["LoginProvider"] = info.LoginProvider;
             var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-            return View("ExternalLoginConfirmation", new LoginViewModel() {Email = email, ReturnUrl = returnUrl, LoginProvider = info.LoginProvider});
+            return View("ExternalLoginConfirmation", new LoginViewModel() { Email = email, ReturnUrl = returnUrl, LoginProvider = info.LoginProvider });
         }
 
         [HttpPost]
@@ -217,19 +215,35 @@ namespace ExternalLogins.Facebook.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await _userManager.CreateAsync(user);
-                if (result.Succeeded)
+
+                IdentityResult result = null;
+                var signIn = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: true);
+                if (signIn.Succeeded)
                 {
-                    result = await _userManager.AddLoginAsync(user, info);
-                    if (result.Succeeded)
+                    var user = await _userManager.FindByNameAsync(model.UserName);
+                    var logins = await _userManager.GetLoginsAsync(user);
+                    if (logins.All(l => l.LoginProvider != ExternalLoginsModel.FaceBook.ProviderName))
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        _logger.LogInformation(6, "User created an account using {Name} provider.", info.LoginProvider);
-                        return RedirectToLocal(returnUrl);
+                        result = await _userManager.AddLoginAsync(user, info);
+                        if (!result.Succeeded)
+                        {
+                            // NB Error handling here.
+                            foreach (var error in result.Errors)
+                            {
+                                ModelState.AddModelError(string.Empty, error.Code + " " + error.Description);
+                            }
+                        }
                     }
+
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    _logger.LogInformation(6, "User linked account to {Name} provider.", info.LoginProvider);
+                    return RedirectToLocal(returnUrl);
                 }
-                AddErrors(result);
+                else
+                {
+                    AddErrors(result);
+                    ModelState.AddModelError(string.Empty, "Unsuccessful local login attempt. Invalid credentials.");
+                }
             }
 
             model.ReturnUrl = returnUrl;

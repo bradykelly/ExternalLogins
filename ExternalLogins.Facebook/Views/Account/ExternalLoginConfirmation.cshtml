@@ -4,26 +4,43 @@
     ViewData["Title"] = "Register";
 }
 
-<h3>Associate your @ViewData["LoginProvider"] account.</h3>
 <div class="row">
     <div class="col-md-6">
-        <p class="text-info">
-            You've successfully logged in with <strong>@ViewData["LoginProvider"]</strong>.
-            If you have a local account, i.e. if you have previously registeted for this website,
-            please sign in to that account in the right hand side panel, so that we can link that account to your Facebook login.
-            If you do not have a local login, please click the <strong>Register</strong> button at the bottom of that right side panel. 
-            You will then complete our simple registration process, and we then automatically link your Facebook login to your new account.
-        </p>
+        <fieldset>
+            <legend>Associate your @ViewData["LoginProvider"] account.</legend>
+            <p class="text-info">
+                You've successfully logged in with <strong>@ViewData["LoginProvider"]</strong>.
+                If you have a local account, i.e. if you have previously registeted for this website,
+                please sign in to that account in the right hand side panel, so that we can link it to your Facebook login.
+            </p>
+            <p>
+                If you do not have a local login, please click the <strong>Register</strong> button at the bottom of that right side panel.
+                You will then register with this website, and your new account is then automatically link your Facebook login.
+            </p>
+        </fieldset>
     </div>
     <div class="col-md-6">
         <form asp-controller="Account" asp-action="ExternalLoginConfirmation" method="post" class="form-horizontal">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            @Html.Partial("_LoginInputsPartial")
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <button type="submit" class="btn btn-default">Register</button>
+
+            <fieldset>
+                <legend>Login Details</legend>
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="row">
+                    @Html.Partial("_LoginInputsPartial")
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            @*TODO Syle this button much better.*@
+                            <button type="submit" class="btn btn-default">Link Account</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            @*TODO Syle this button much better.*@
+                            @Html.ActionLink("Register", "Register", null, new { @class = "btn btn-default" })
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </fieldset>
         </form>
     </div>
 </div>

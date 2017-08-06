@@ -8,7 +8,6 @@ namespace ExternalLogins.Facebook.ViewModels.Account
         // TODO Show password.
         [Required(AllowEmptyStrings = false)]
         [EmailAddress]
-        [StringLength(10)]
         [Display(Name = "Email")]
         public string UserName { get; set; }
 
