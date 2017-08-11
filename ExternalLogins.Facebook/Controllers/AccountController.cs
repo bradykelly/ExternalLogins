@@ -222,6 +222,7 @@ namespace ExternalLogins.Facebook.Controllers
                 {
                     var user = await _userManager.FindByNameAsync(model.UserName);
                     var logins = await _userManager.GetLoginsAsync(user);
+
                     if (logins.All(l => l.LoginProvider != ExternalLoginsModel.FaceBook.ProviderName))
                     {
                         result = await _userManager.AddLoginAsync(user, info);
@@ -229,7 +230,7 @@ namespace ExternalLogins.Facebook.Controllers
                         {
                             AddErrors(result);
                             return View(model);
-                        }
+                        }                        
                     }
 
                     await _signInManager.SignInAsync(user, isPersistent: false);

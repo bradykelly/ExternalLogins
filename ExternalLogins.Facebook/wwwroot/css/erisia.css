@@ -1,7 +1,15 @@
 ﻿body {
     padding-top: 5px;
 }
+.current-user {
+    
+}
+
+.btn-wide {
+    width: 100%;
+}
 
 #topNavBar {
     position: relative;
 }
+

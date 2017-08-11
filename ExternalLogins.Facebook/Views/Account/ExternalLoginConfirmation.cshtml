@@ -7,41 +7,41 @@
 <div class="row">
     <div class="col-md-6">
         <fieldset>
-            <legend>Associate your @ViewData["LoginProvider"] account.</legend>
+            <legend>Search</legend>
             <p class="text-info">
-                You've successfully logged in with <strong>@ViewData["LoginProvider"]</strong>.
-                If you have a local account, i.e. if you have previously registeted for this website,
-                please sign in to that account in the right hand side panel, so that we can link it to your Facebook login.
-            </p>
-            <p>
-                If you do not have a local login, please click the <strong>Register</strong> button at the bottom of that right side panel.
-                You will then register with this website, and your new account is then automatically link your Facebook login.
+                You've successfully logged in with <strong>@Model.LoginProvider</strong> your Facebook
+                account. If you are registeted on this website, please sign in to that local  account now,
+                and your account will automattically be lined with your <strong>@Model.LoginProvider</strong>.
+
+            <p class="text-info">
+                If you are not registered here, please click the <strong>Register</strong> button. Registering will 
+                give you a local account on with this website. which will  be automatically linked to your Facebook login.
             </p>
         </fieldset>
     </div>
     <div class="col-md-6">
         <form asp-controller="Account" asp-action="ExternalLoginConfirmation" method="post" class="form-horizontal">
-
             <fieldset>
-                <legend>Login Details</legend>
+                <legend>Sign-In</legend>
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="row">
                     @Html.Partial("_LoginInputsPartial")
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
                             @*TODO Syle this button much better.*@
-                            <button type="submit" class="btn btn-default">Link Account</button>
+                            <button type="submit" class="btn btn-default">Sign In</button>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
                             @*TODO Syle this button much better.*@
-                            @Html.ActionLink("Register", "Register", null, new { @class = "btn btn-default" })
+                            @*@Html.ActionLink("Register", "Register", null, new { @class = "btn btn-default" })*@
+                            <a href="@Url.Action("Register", "Account")" as class="btn btn-default btn-wide">Register</a>
                         </div>
                     </div>
                 </div>
             </fieldset>
-        </form>
+        </form>LOGGED 
     </div>
 </div>
 
