@@ -13,9 +13,11 @@ using Microsoft.Extensions.Logging;
 namespace ExternalLogins
 {
     // TODO Use secret manager, more consistent with 'textook' stuff.
-    
+           
     public class Startup
     {
+        private string _testSecret = null;
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -77,8 +79,8 @@ namespace ExternalLogins
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
             app.UseFacebookAuthentication(new FacebookOptions
             {
-                AppId = FacebookLoginModel.Credentials.AppId,
-                AppSecret = FacebookLoginModel.Credentials.AppSecret,
+                AppId = Configuration[ExternalAuthConfigModel.Facebook.SecretKeys.AppIdKey],
+                AppSecret = Configuration[ExternalAuthConfigModel.Facebook.SecretKeys.AppSecretKey],
             });
 
             app.UseMvc(routes =>

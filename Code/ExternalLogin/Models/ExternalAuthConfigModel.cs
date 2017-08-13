@@ -11,8 +11,8 @@ namespace ExternalLogins.Models
         {
             public static class SecretKeys
             {
-                public const string AppIdKey = "Auth:Facebook:AppId";
-                public const string AppSecretKey = "Auth:Facebook:AppSecret";
+                public const string AppIdKey = "Auth:Logins:Facebook:AppId";
+                public const string AppSecretKey = "Auth:Logins:Facebook:AppSecret";
             }
         }
     }
