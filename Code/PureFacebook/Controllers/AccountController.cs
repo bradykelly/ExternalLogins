@@ -1,18 +1,19 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using ExternalLogins.Models;
-using ExternalLogins.Models.AccountViewModels;
-using ExternalLogins.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using PureFacebook.Models;
+using PureFacebook.Models.AccountViewModels;
+using PureFacebook.Services;
 
-namespace ExternalLogins.Controllers
+namespace PureFacebook.Controllers
 {
     [Authorize]
     public class AccountController : Controller
@@ -138,10 +139,6 @@ namespace ExternalLogins.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            // TODO Log out of facebook? Very tricky question.
-
-            // NB Log out of external logins at as well. Somehow.
-
             await _signInManager.SignOutAsync();
             _logger.LogInformation(4, "User logged out.");
             return RedirectToAction(nameof(HomeController.Index), "Home");
@@ -166,7 +163,6 @@ namespace ExternalLogins.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
         {
-            Debug.Fail("No other way!");
             if (remoteError != null)
             {
                 ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");

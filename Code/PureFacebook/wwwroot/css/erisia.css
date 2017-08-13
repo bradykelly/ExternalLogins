@@ -1,0 +1,8 @@
+﻿.help {
+    /*border is just a placeholder so I don't forget indigo*/
+    border: indigo
+}
+
+.help .a {
+    color: steelblue
+}
