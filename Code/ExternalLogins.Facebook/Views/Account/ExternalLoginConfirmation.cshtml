@@ -1,49 +1,34 @@
-﻿@using Microsoft.AspNetCore.Mvc.Rendering
-@model ExternalLogins.Facebook.ViewModels.Account.LoginViewModel
+﻿@model ExternalLoginConfirmationViewModel
 @{
     ViewData["Title"] = "Register";
 }
 
-<div class="row">
-    <div class="col-md-6">
-        <fieldset>
-            <legend>Search</legend>
-            <p class="text-info">
-                You've successfully logged in with <strong>@Model.LoginProvider</strong> your Facebook
-                account. If you are registeted on this website, please sign in to that local  account now,
-                and your account will automattically be lined with your <strong>@Model.LoginProvider</strong>.
+<h2>@ViewData["Title"].</h2>
+<h3>Associate your @ViewData["LoginProvider"] account.</h3>
 
-            <p class="text-info">
-                If you are not registered here, please click the <strong>Register</strong> button. Registering will 
-                give you a local account on with this website. which will  be automatically linked to your Facebook login.
-            </p>
-        </fieldset>
+<form asp-controller="Account" asp-action="ExternalLoginConfirmation" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+    <h4>Association Form</h4>
+    <hr />
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <p class="text-info">
+        You've successfully authenticated with <strong>@ViewData["LoginProvider"]</strong>.
+        Please enter an email address for this site below and click the Register button to finish
+        logging in.
+    </p>
+    <div class="form-group">
+        <label asp-for="Email" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
     </div>
-    <div class="col-md-6">
-        <form asp-controller="Account" asp-action="ExternalLoginConfirmation" method="post" class="form-horizontal">
-            <fieldset>
-                <legend>Sign-In</legend>
-                <div asp-validation-summary="All" class="text-danger"></div>
-                <div class="row">
-                    @Html.Partial("_LoginInputsPartial")
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            @*TODO Syle this button much better.*@
-                            <button type="submit" class="btn btn-default">Sign In</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            @*TODO Syle this button much better.*@
-                            @*@Html.ActionLink("Register", "Register", null, new { @class = "btn btn-default" })*@
-                            <a href="@Url.Action("Register", "Account")" as class="btn btn-default btn-wide">Register</a>
-                        </div>
-                    </div>
-                </div>
-            </fieldset>
-        </form>LOGGED 
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-default">Register</button>
+        </div>
     </div>
-</div>
+</form>
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
