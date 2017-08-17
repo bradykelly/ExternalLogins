@@ -89,4 +89,9 @@
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        $(function() {
+            $("#Email").val("brady@bradykelly.net");
+        });
+    </script>
 }
