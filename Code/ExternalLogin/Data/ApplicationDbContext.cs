@@ -1,4 +1,5 @@
-﻿using ExternalLogins.Models;
+﻿using ExternalLogins.Data.Models;
+using ExternalLogins.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,8 @@ namespace ExternalLogins.Data
             : base(options)
         {
         }
+
+        public DbSet<Booking> Bookings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

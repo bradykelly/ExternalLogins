@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using ExternalLogins.Data;
 using ExternalLogins.Models;
 using ExternalLogins.Models.AccountViewModels;
 using ExternalLogins.Services;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Query.ExpressionTranslators.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -16,6 +18,7 @@ namespace ExternalLogins.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private readonly ApplicationDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
@@ -24,6 +27,7 @@ namespace ExternalLogins.Controllers
         private readonly string _externalCookieScheme;
 
         public AccountController(
+            ApplicationDbContext dbContext,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IOptions<IdentityCookieOptions> identityCookieOptions,
@@ -31,6 +35,7 @@ namespace ExternalLogins.Controllers
             ISmsSender smsSender,
             ILoggerFactory loggerFactory)
         {
+            _db = dbContext;
             _userManager = userManager;
             _signInManager = signInManager;
             _externalCookieScheme = identityCookieOptions.Value.ExternalCookieAuthenticationScheme;
@@ -47,9 +52,10 @@ namespace ExternalLogins.Controllers
         {
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.Authentication.SignOutAsync(_externalCookieScheme);
-
+            ////returnUrl = SqlServerStringTrimEndTranslator====
             ViewData["ReturnUrl"] = returnUrl;
-            return View();
+            var model = new LoginViewModel();
+            return View(model);
         }
 
         //
@@ -121,7 +127,7 @@ namespace ExternalLogins.Controllers
                     //await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
                     //    $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    _logger.LogInformation(3, "User created a new account with password.");
+                    _logger.LogInformation(3, $"User created a new account: '{user.UserName}'");
                     return RedirectToLocal(returnUrl);
                 }
                 AddErrors(result);
