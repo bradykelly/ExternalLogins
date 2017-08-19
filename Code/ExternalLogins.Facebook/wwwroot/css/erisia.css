@@ -1,2 +1,12 @@
-﻿body {
+﻿/* COLOURS */
+
+
+/* Text */
+.caution {
+    color: goldenrod;
+}
+
+a.caution-link:hover {
+    color: gold;
+    font-weight: bold;
 }

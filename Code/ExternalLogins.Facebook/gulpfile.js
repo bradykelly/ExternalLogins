@@ -1,10 +1,12 @@
-﻿var gulp = require("gulp");
-var fs = require("fs");
-var sass = require("gulp-sass");
+﻿var gulp = require("gulp"),
+    fs = require("fs"),
+    less = require("gulp-less"),
+    sass = require("gulp-sass");
 
+// other content removed
 
 gulp.task("sass", function () {
-    return gulp.src("Sass/text.scss")
+    return gulp.src("Styles/text.scss")
         .pipe(sass())
-        .pipe(gulp.destination("wwwroot/css"));
+        .pipe(gulp.dest("wwwroot/css"));
 });
