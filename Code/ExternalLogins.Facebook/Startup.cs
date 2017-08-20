@@ -85,6 +85,12 @@ namespace ExternalLogins.Facebook
                 AppSecret = ExternalAuthModel.Facebook.AppSecret
             });
 
+            app.UseTwitterAuthentication(new TwitterOptions
+            {
+                ConsumerKey = "Ys7lMyv9mMPOK5LEnrLBIPT3E",
+                ConsumerSecret = "Z12IaIIYotJr2VLpjHnLS69rxo1EmK8injBILso5HxVUp7gpTo"
+            });
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

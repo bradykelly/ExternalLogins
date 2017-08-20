@@ -1,11 +1,11 @@
 ﻿@model ManageLoginsViewModel
 @using Microsoft.AspNetCore.Http.Authentication
 @{
-    ViewData["Title"] = "Manage your external logins";
+    ViewData["Title"] = "Manage External Logins";
 }
 
 <h2>@ViewData["Title"].</h2>
-
+<hr />
 <p class="text-success">@ViewData["StatusMessage"]</p>
 @if (Model.CurrentLogins.Count > 0)
 {
