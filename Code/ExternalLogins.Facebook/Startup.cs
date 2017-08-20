@@ -1,9 +1,12 @@
-﻿using ExternalLogins.Facebook.Data;
+﻿using AutoMapper;
+using ExternalLogins.Facebook.Data;
 using ExternalLogins.Facebook.Models;
 using ExternalLogins.Facebook.Models.ExternalAuth;
 using ExternalLogins.Facebook.Services;
+using ExternalLogins.Facebook.ViewModels.Manage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -97,6 +100,11 @@ namespace ExternalLogins.Facebook
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private void ConfigureAutoMapper()
+        {
+            Mapper.Initialize(cfg => cfg.CreateMap<UserLoginInfo, ManageLoginsRowViewModel>());
         }
     }
 }

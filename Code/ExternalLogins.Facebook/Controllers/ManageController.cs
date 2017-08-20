@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +12,7 @@ using Microsoft.Extensions.Options;
 using ExternalLogins.Facebook.Models;
 using ExternalLogins.Facebook.Models.ManageViewModels;
 using ExternalLogins.Facebook.Services;
+using ExternalLogins.Facebook.ViewModels.Manage;
 
 namespace ExternalLogins.Facebook.Controllers
 {
@@ -52,6 +55,7 @@ namespace ExternalLogins.Facebook.Controllers
                 : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
                 : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
                 : "";
+
 
             var user = await GetCurrentUserAsync();
             if (user == null)
@@ -290,14 +294,21 @@ namespace ExternalLogins.Facebook.Controllers
             {
                 return View("Error");
             }
+
+
+
             var userLogins = await _userManager.GetLoginsAsync(user);
             var otherLogins = _signInManager.GetExternalAuthenticationSchemes().Where(auth => userLogins.All(ul => auth.AuthenticationScheme != ul.LoginProvider)).ToList();
             ViewData["ShowRemoveButton"] = user.PasswordHash != null || userLogins.Count > 1;
-            return View(new ManageLoginsViewModel
-            {
-                CurrentLogins = userLogins,
-                OtherLogins = otherLogins
-            });
+
+            // NBNB fix model urgently.
+            var model = new ManageLoginsViewModel();
+            //{
+            //    CurrentLogins = userLogins,
+            //    OtherLogins = otherLogins
+            //};
+
+            return View(model);
         }
 
         //
@@ -369,5 +380,18 @@ namespace ExternalLogins.Facebook.Controllers
         }
 
         #endregion
+
+        public async Task PopulateManageLoginsModel(ManageLoginsViewModel model)
+        {
+            // Get linked logins.
+            var linked = new List<UserLoginInfo>(await _userManager.GetLoginsAsync(model.User)).Select(l => Mapper.Map<ManageLoginsRowViewModel>(l));
+            var models = linked as IList<ManageLoginsRowViewModel> ?? linked.ToList();
+            model.CurrentLogins.AddRange(models);
+            
+            // Get all logins
+            var allLogins = _signInManager.GetExternalAuthenticationSchemes().Where(auth => models.All(ul => auth.AuthenticationScheme != ul.LoginProvider)).ToList();
+
+
+        }
     }
 }
