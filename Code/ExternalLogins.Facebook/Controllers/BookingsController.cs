@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -14,15 +15,19 @@ namespace ExternalLogins.Facebook.Controllers
     {
         private readonly ApplicationDbContext _context;
 
+        private const string DateFormat = "yyyyMMdd";
+
         public BookingsController(ApplicationDbContext context)
         {
             _context = context;    
         }
 
         // GET: Bookings
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Booking.ToListAsync());
+            var model = new List<Booking>();
+            model.AddRange(GetTestBookings());
+            return View(model);
         }
 
         // GET: Bookings/Details/5
@@ -148,6 +153,30 @@ namespace ExternalLogins.Facebook.Controllers
         private bool BookingExists(int id)
         {
             return _context.Booking.Any(e => e.Id == id);
+        }
+
+        private IEnumerable<Booking> GetTestBookings()
+        {
+            var model = new List<Booking>();
+            model.Add(new Booking
+            {
+                End = DateTime.ParseExact("20170815", DateFormat, CultureInfo.InvariantCulture),
+                Start = DateTime.ParseExact("20170816", DateFormat, CultureInfo.InvariantCulture),
+                Description = $"Booking No: 1"
+            });
+            model.Add(new Booking
+            {
+                End = DateTime.ParseExact("20170815", DateFormat, CultureInfo.InvariantCulture),
+                Start = DateTime.ParseExact("20170816", DateFormat, CultureInfo.InvariantCulture),
+                Description = $"Booking No: 2"
+            });
+            model.Add(new Booking
+            {
+                End = DateTime.ParseExact("20170815", DateFormat, CultureInfo.InvariantCulture),
+                Start = DateTime.ParseExact("20170816", DateFormat, CultureInfo.InvariantCulture),
+                Description = $"Booking No: 3"
+            });
+            return model;
         }
     }
 }
