@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ExternalLogins.Facebook.Data;
+using ExternalLogins.Facebook.Models;
+using ExternalLogins.Facebook.Models.ExternalAuth;
+using ExternalLogins.Facebook.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -9,9 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ExternalLogins.Facebook.Data;
-using ExternalLogins.Facebook.Models;
-using ExternalLogins.Facebook.Services;
 
 namespace ExternalLogins.Facebook
 {
@@ -21,20 +18,25 @@ namespace ExternalLogins.Facebook
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
+                .AddEnvironmentVariables()
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
             if (env.IsDevelopment())
             {
-                // For more details on using the user secret store see https://go.microsoft.com/fwlink/?LinkID=532709
+                // TODO Move on to use secret manager.
                 builder.AddUserSecrets<Startup>();
             }
 
-            builder.AddEnvironmentVariables();
+            // NB Move to a proper read/transform from config.
+            ExternalAuthModel.Facebook.AppId = "1921033554817400";
+            ExternalAuthModel.Facebook.AppSecret = "18163913013fad1ba18490be1b20e473";
+
             Configuration = builder.Build();
         }
 
         public IConfigurationRoot Configuration { get; }
+        public static ExternalAuthModel ExternalAuth { get; } = new ExternalAuthModel();
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -47,7 +49,6 @@ namespace ExternalLogins.Facebook
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddCors();
             services.AddMvc();
 
             // Add application services.
@@ -73,13 +74,15 @@ namespace ExternalLogins.Facebook
             }
 
             app.UseStaticFiles();
-            app.UseIdentity();    
+            app.UseIdentity();
 
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
+
             app.UseFacebookAuthentication(new FacebookOptions
             {
-                AppId = ExternalLoginsModel.FaceBook.AppId,
-                AppSecret = ExternalLoginsModel.FaceBook.AppSecret,
+                // TODO Use such an object pulled directly from 
+                AppId = ExternalAuthModel.Facebook.AppId,
+                AppSecret = ExternalAuthModel.Facebook.AppSecret
             });
 
             app.UseMvc(routes =>

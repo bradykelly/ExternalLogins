@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ExternalLogins.Facebook.Models;
+using ExternalLogins.Facebook.Data.Models;
 
 namespace ExternalLogins.Facebook.Data
 {
@@ -22,5 +23,7 @@ namespace ExternalLogins.Facebook.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
         }
+
+        public DbSet<ExternalLogins.Facebook.Data.Models.Booking> Booking { get; set; }
     }
 }

@@ -1,0 +1,25 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'version',
+1 verbose cli   'node-sass' ]
+2 info using npm@4.1.2
+3 info using node@v7.6.0
+4 error version No valid package.json found
+5 verbose stack Error: Error: ENOENT: no such file or directory, open 'C:\Projects\ExternalAuth\package.json'
+5 verbose stack     at ReadFileContext.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\version.js:111:23)
+5 verbose stack     at ReadFileContext.callback (C:\Program Files\nodejs\node_modules\npm\node_modules\graceful-fs\graceful-fs.js:78:16)
+5 verbose stack     at FSReqWrap.readFileAfterOpen [as oncomplete] (fs.js:357:13)
+6 verbose cwd C:\Projects\ExternalAuth
+7 error Windows_NT 10.0.14393
+8 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "version" "node-sass"
+9 error node v7.6.0
+10 error npm  v4.1.2
+11 error code [ 'Error: ENOENT',
+11 error code   'ENOENT',
+11 error code   index: 0,
+11 error code   input: 'Error: ENOENT: no such file or directory, open \'C:\\Projects\\ExternalAuth\\package.json\'' ]
+12 error Error: ENOENT: no such file or directory, open 'C:\Projects\ExternalAuth\package.json'
+13 error If you need help, you may report this error at:
+13 error     <https://github.com/npm/npm/issues>
+14 verbose exit [ 1, true ]

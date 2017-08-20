@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <UserSecretsId>aspnet-ExternalLogins.Facebook-1bee380e-5a6d-4d20-9274-c0b886db5528</UserSecretsId>
+    <UserSecretsId>aspnet-ExternalLogins.Facebook-16248324-37ed-4e9c-914a-3b8c5caaa289</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,7 +20,6 @@
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Cors" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.3" />

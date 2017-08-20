@@ -1,10 +1,9 @@
 ﻿@using System.Collections.Generic
 @using System.Linq
-@using ExternalLogins.Facebook.ViewModels.Account
+@using ExternalLogins.Facebook.Models.ExternalAuth
 @using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Http.Authentication
-@using Microsoft.AspNetCore.Mvc.Rendering
-@model ExternalLogins.Facebook.ViewModels.Account.LoginViewModel
+@model LoginViewModel
 @inject SignInManager<ApplicationUser> SignInManager
 
 @{
@@ -15,17 +14,15 @@
 <div class="row">
     <div class="col-md-8">
         <section>
-            <form asp-controller="Account" asp-action="Login" asp-all-route-data-test="Hello" method="post" class="form-horizontal">
+            <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
                 <h4>Use a local account to log in.</h4>
                 <hr />
                 <div asp-validation-summary="All" class="text-danger"></div>
-                @*NB Replace with partial!*@
-                @*@Html.Partial("_LoginInputsPartial")*@
                 <div class="form-group">
                     <label asp-for="Email" class="col-md-2 control-label"></label>
                     <div class="col-md-10">
-                        <input asp-for="UserName" class="form-control" />
-                        <span asp-validation-for="UserName" class="text-danger"></span>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -51,7 +48,7 @@
                     </div>
                 </div>
                 <p>
-                    <a asp-action="Register" asp-route-returnurl="@Model.ReturnUrl">Register as a new user?</a>
+                    <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Register as a new user?</a>
                 </p>
                 <p>
                     <a asp-action="ForgotPassword">Forgot your password?</a>
@@ -64,8 +61,8 @@
             <h4>Use another service to log in.</h4>
             <hr />
             @{
-                var loginProviders = SignInManager.GetExternalAuthenticationSchemes().ToList();
-                if (loginProviders.Count == 0)
+                var loginProviders = SignInManager.GetExternalAuthenticationSchemes();
+                if (!loginProviders.Any())
                 {
                     <div>
                         <p>
@@ -77,14 +74,27 @@
                 else
                 {
                     <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
-                        <div>
-                            <p>
+                        <ul>
+                            <li>
                                 @foreach (var provider in loginProviders)
                                 {
+                                    //NO special FB button yet.
+                                    @*if (provider.AuthenticationScheme == ExternalAuthModel.Facebook.Scheme)
+                                    {
+                                        <div class="fb-login-button"
+                                             data-max-rows="1"
+                                             data-size="large"
+                                             data-button-type="login_with"
+                                             data-show-faces="false"
+                                             data-auto-logout-link="false"
+                                             data-use-continue-as="false">                                            
+                                        </div>
+                                        continue;
+                                    }*@
                                     <button type="submit" class="btn btn-default" name="provider" value="@provider.AuthenticationScheme" title="Log in using your @provider.DisplayName account">@provider.AuthenticationScheme</button>
                                 }
-                            </p>
-                        </div>
+                            </li>
+                        </ul>
                     </form>
                 }
             }
@@ -94,4 +104,9 @@
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        $(function () {
+            $("#Email").val("brady@bradykelly.net");
+        });
+    </script>
 }
