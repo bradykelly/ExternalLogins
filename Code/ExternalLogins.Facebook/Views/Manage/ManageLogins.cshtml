@@ -1,5 +1,4 @@
 ﻿@model ManageLoginsViewModel
-@using Microsoft.AspNetCore.Http.Authentication
 @{
     ViewData["Title"] = "Manage External Logins";
 }
@@ -9,7 +8,7 @@
 <p class="text-success">@ViewData["StatusMessage"]</p>
 @if (Model.CurrentLogins.Count > 0)
 {
-    <h4>Registered Logins</h4>
+    <h4>Linked Logins</h4>
     <table class="table">
         <tbody>
             @for (var index = 0; index < Model.CurrentLogins.Count; index++)

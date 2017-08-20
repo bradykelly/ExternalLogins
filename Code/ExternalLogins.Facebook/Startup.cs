@@ -101,12 +101,17 @@ namespace ExternalLogins.Facebook
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            ConfigureAutoMapper();          
         }
 
         private void ConfigureAutoMapper()
         {
-            Mapper.Initialize(cfg => cfg.CreateMap<UserLoginInfo, ManageLoginsRowViewModel>());
-            Mapper.Initialize(cfg => cfg.CreateMap<AuthenticationDescription, ManageLoginsRowViewModel>());
+            Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<AuthenticationDescription, ManageLoginsRowViewModel>();
+                cfg.CreateMap<UserLoginInfo, ManageLoginsRowViewModel>();
+            });
         }
     }
 }

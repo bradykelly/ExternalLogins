@@ -290,12 +290,8 @@ namespace ExternalLogins.Facebook.Controllers
                 : message == ManageMessageId.Error ? "An error has occurred."
                 : "";
             var user = await GetCurrentUserAsync();
-            if (user == null)
-            {
-                return View("Error");
-            }
-
             var model = new ManageLoginsViewModel();
+            model.User = user ?? throw new InvalidOperationException("Login Management could not determine the current user.");
             await PopulateManageLoginsModel(model);
             ViewData["ShowRemoveButton"] = user.PasswordHash != null || model.CurrentLogins.Count > 1;
 
