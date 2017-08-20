@@ -22,17 +22,7 @@ namespace ExternalLogins.Facebook.ViewModels.Manage
 
         public string ProviderKey { get; set; }
 
-        public void Read(AuthenticationDescription desc)
-        {
-            LoginProvider = desc.DisplayName;
-        }
-
-        public void ReadUserLoginInfo(UserLoginInfo info)
-        {
-            LoginProvider = info.LoginProvider;
-            ProviderDisplayName = info.ProviderDisplayName;
-            ProviderKey = info.ProviderKey;
-        }
+        public bool IsLinked { get; set; }
     }
 }
 

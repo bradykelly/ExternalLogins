@@ -6,6 +6,7 @@ using ExternalLogins.Facebook.Services;
 using ExternalLogins.Facebook.ViewModels.Manage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -105,6 +106,7 @@ namespace ExternalLogins.Facebook
         private void ConfigureAutoMapper()
         {
             Mapper.Initialize(cfg => cfg.CreateMap<UserLoginInfo, ManageLoginsRowViewModel>());
+            Mapper.Initialize(cfg => cfg.CreateMap<AuthenticationDescription, ManageLoginsRowViewModel>());
         }
     }
 }

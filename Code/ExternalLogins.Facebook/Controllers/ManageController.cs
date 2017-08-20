@@ -295,18 +295,9 @@ namespace ExternalLogins.Facebook.Controllers
                 return View("Error");
             }
 
-
-
-            var userLogins = await _userManager.GetLoginsAsync(user);
-            var otherLogins = _signInManager.GetExternalAuthenticationSchemes().Where(auth => userLogins.All(ul => auth.AuthenticationScheme != ul.LoginProvider)).ToList();
-            ViewData["ShowRemoveButton"] = user.PasswordHash != null || userLogins.Count > 1;
-
-            // NBNB fix model urgently.
             var model = new ManageLoginsViewModel();
-            //{
-            //    CurrentLogins = userLogins,
-            //    OtherLogins = otherLogins
-            //};
+            await PopulateManageLoginsModel(model);
+            ViewData["ShowRemoveButton"] = user.PasswordHash != null || model.CurrentLogins.Count > 1;
 
             return View(model);
         }
@@ -384,14 +375,25 @@ namespace ExternalLogins.Facebook.Controllers
         public async Task PopulateManageLoginsModel(ManageLoginsViewModel model)
         {
             // Get linked logins.
-            var linked = new List<UserLoginInfo>(await _userManager.GetLoginsAsync(model.User)).Select(l => Mapper.Map<ManageLoginsRowViewModel>(l));
-            var models = linked as IList<ManageLoginsRowViewModel> ?? linked.ToList();
+            var logins = new List<UserLoginInfo>(await _userManager.GetLoginsAsync(model.User)).Select(Mapper.Map<ManageLoginsRowViewModel>).ToList();
+            logins.ForEach(l =>
+            {
+                l.IsLinked = false;
+                l.UserId = model.User.Id;
+            });
+            var models = logins as IList<ManageLoginsRowViewModel> ?? logins.ToList();
             model.CurrentLogins.AddRange(models);
             
             // Get all logins
-            var allLogins = _signInManager.GetExternalAuthenticationSchemes().Where(auth => models.All(ul => auth.AuthenticationScheme != ul.LoginProvider)).ToList();
-
-
+            // TODO What is the large WHERE?
+            var inactive = _signInManager.GetExternalAuthenticationSchemes()
+                .Where(auth => models.All(ul => auth.AuthenticationScheme != ul.LoginProvider)).Select(Mapper.Map<ManageLoginsRowViewModel>).ToList();
+            inactive.ForEach(l =>
+            {
+                l.IsLinked = false;
+                l.UserId = model.User.Id;
+            });
+            model.OtherLogins.AddRange(inactive);
         }
     }
 }

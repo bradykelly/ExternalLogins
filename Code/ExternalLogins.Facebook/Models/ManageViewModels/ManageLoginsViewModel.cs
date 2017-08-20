@@ -12,8 +12,8 @@ namespace ExternalLogins.Facebook.Models.ManageViewModels
     {
         public ApplicationUser User { get; set; }
 
-        public List<ManageLoginsRowViewModel> CurrentLogins { get; set; }
+        public List<ManageLoginsRowViewModel> CurrentLogins { get; set; } = new List<ManageLoginsRowViewModel>();
 
-        public IList<AuthenticationDescription> OtherLogins { get; set; }
+        public List<ManageLoginsRowViewModel> OtherLogins { get; set; } = new List<ManageLoginsRowViewModel>();
     }
 }
