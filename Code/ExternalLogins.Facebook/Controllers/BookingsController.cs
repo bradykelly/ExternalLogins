@@ -30,62 +30,6 @@ namespace ExternalLogins.Facebook.Controllers
             return View(model);
         }
 
-        // GET: Bookings/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var booking = await _context.Booking
-                .SingleOrDefaultAsync(m => m.Id == id);
-            if (booking == null)
-            {
-                return NotFound();
-            }
-
-            return View(booking);
-        }
-
-        // GET: Bookings/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Bookings/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Start,End,Description")] Booking booking)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(booking);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            return View(booking);
-        }
-
-        // GET: Bookings/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var booking = await _context.Booking.SingleOrDefaultAsync(m => m.Id == id);
-            if (booking == null)
-            {
-                return NotFound();
-            }
-            return View(booking);
-        }
-
         // POST: Bookings/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -121,35 +65,6 @@ namespace ExternalLogins.Facebook.Controllers
             return View(booking);
         }
 
-        // GET: Bookings/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var booking = await _context.Booking
-                .SingleOrDefaultAsync(m => m.Id == id);
-            if (booking == null)
-            {
-                return NotFound();
-            }
-
-            return View(booking);
-        }
-
-        // POST: Bookings/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var booking = await _context.Booking.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Booking.Remove(booking);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
-
         private bool BookingExists(int id)
         {
             return _context.Booking.Any(e => e.Id == id);
@@ -166,14 +81,14 @@ namespace ExternalLogins.Facebook.Controllers
             });
             model.Add(new Booking
             {
-                End = DateTime.ParseExact("20170815", DateFormat, CultureInfo.InvariantCulture),
-                Start = DateTime.ParseExact("20170816", DateFormat, CultureInfo.InvariantCulture),
+                ////End = DateTime.ParseExact("20190115", DateFormat, CultureInfo.InvariantCulture),
+                Start = DateTime.ParseExact("20190112", DateFormat, CultureInfo.InvariantCulture),
                 Description = $"Booking No: 2"
             });
             model.Add(new Booking
             {
-                End = DateTime.ParseExact("20170815", DateFormat, CultureInfo.InvariantCulture),
-                Start = DateTime.ParseExact("20170816", DateFormat, CultureInfo.InvariantCulture),
+                End = DateTime.ParseExact("20170221", DateFormat, CultureInfo.InvariantCulture),
+                Start = DateTime.ParseExact("20170716", DateFormat, CultureInfo.InvariantCulture),
                 Description = $"Booking No: 3"
             });
             return model;
